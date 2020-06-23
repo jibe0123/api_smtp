@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"github.com/jibe0123/api_smtp/database/models"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"os"
@@ -25,6 +26,7 @@ func Initialize() (*gorm.DB, error) {
 		db, err := gorm.Open("mysql", dsn)
 
 		if err == nil {
+			models.Migrate(db)
 			fmt.Println("Connected to database")
 			return db,nil
 		}
