@@ -6,6 +6,6 @@ import (
 )
 
 func Migrate(db *gorm.DB) {
-	db.AutoMigrate(&User{}, &Clients{})
-	fmt.Println("Auto Migration has beed processed")
+	db.AutoMigrate(&User{}, &Clients{}, &MailingList{})
+	fmt.Println("Auto Migration has been processed")
 }

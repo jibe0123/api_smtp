@@ -7,15 +7,15 @@ import (
 
 type Clients struct {
 	gorm.Model
-	Users        []User `gorm:"foreignkey:ClientID"`
-	CompanyName string
+	Users         []User `gorm:"foreignkey:ClientID"`
+	MailingList         []User `gorm:"foreignkey:ClientID"`
+	CompanyName   string
 }
-
 
 // Serialize serializes user data
 func (c *Clients) Serialize() common.JSON {
 	return common.JSON{
-		"id":           c.ID,
+		"id":          c.ID,
 		"companyName": c.CompanyName,
 		"users":       c.Users,
 	}
@@ -23,5 +23,5 @@ func (c *Clients) Serialize() common.JSON {
 
 func (c *Clients) Read(m common.JSON) {
 	c.ID = uint(m["id"].(float64))
-	c.CompanyName = m["campany_name"].(string)
+	c.CompanyName = m["company_name"].(string)
 }

@@ -11,5 +11,6 @@ func ApplyRoutes(r *gin.RouterGroup) {
 	list := r.Group("/mailing-list")
 	{
 		list.GET("/", middlewares.Authorized, ping)
+		list.POST("/", middlewares.Authorized, create)
 	}
 }
