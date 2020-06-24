@@ -9,21 +9,21 @@ import (
 type User struct {
 	gorm.Model
 	Username     string
-	DisplayName  string
+	Email  string
 	PasswordHash string
+	ClientID uint
 }
 
-// Serialize serializes user data
 func (u *User) Serialize() common.JSON {
 	return common.JSON{
 		"id":           u.ID,
 		"username":     u.Username,
-		"display_name": u.DisplayName,
+		"display_name": u.Email,
 	}
 }
 
 func (u *User) Read(m common.JSON) {
 	u.ID = uint(m["id"].(float64))
 	u.Username = m["username"].(string)
-	u.DisplayName = m["display_name"].(string)
+	u.Email = m["display_name"].(string)
 }

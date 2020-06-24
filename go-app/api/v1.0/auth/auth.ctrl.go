@@ -54,7 +54,7 @@ func register(c *gin.Context) {
 
 	type RequestBody struct {
 		Username    string `json:"username" binding:"required"`
-		DisplayName string `json:"display_name" binding:"required"`
+		Email string `json:"email" binding:"required"`
 		Password    string `json:"password" binding:"required"`
 	}
 
@@ -80,7 +80,7 @@ func register(c *gin.Context) {
 	// create user
 	user := User{
 		Username:     body.Username,
-		DisplayName:  body.DisplayName,
+		Email:  body.Email,
 		PasswordHash: hash,
 	}
 
