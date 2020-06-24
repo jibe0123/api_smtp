@@ -2,19 +2,28 @@ package models
 
 import (
 	common "github.com/jibe0123/api_smtp/lib"
+	"github.com/jinzhu/gorm"
 )
 
+// User data model
 type User struct {
-	ID       uint `gorm:"primary_key"`
-	Username string
-	Email    string
-	Password string
+	gorm.Model
+	Username     string
+	DisplayName  string
+	PasswordHash string
 }
 
-func (p User) Serialize() common.JSON {
+// Serialize serializes user data
+func (u *User) Serialize() common.JSON {
 	return common.JSON{
-		"id":       p.ID,
-		"Username": p.Username,
-		"Email":    p.Email,
+		"id":           u.ID,
+		"username":     u.Username,
+		"display_name": u.DisplayName,
 	}
+}
+
+func (u *User) Read(m common.JSON) {
+	u.ID = uint(m["id"].(float64))
+	u.Username = m["username"].(string)
+	u.DisplayName = m["display_name"].(string)
 }

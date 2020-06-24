@@ -7,5 +7,5 @@ import (
 
 func Migrate(db *gorm.DB) {
 	db.AutoMigrate(&User{})
-	fmt.Println("Auto Migration has been processed")
+	fmt.Println("Auto Migration has beed processed")
 }

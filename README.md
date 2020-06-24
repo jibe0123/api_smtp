@@ -1,1 +1,1 @@
-# api_stmp
+# Marketing campaigns API
