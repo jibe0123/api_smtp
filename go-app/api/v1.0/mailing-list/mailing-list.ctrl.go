@@ -30,8 +30,7 @@ func create(c *gin.Context) {
 	user := c.MustGet("user").(models.User)
 	client := db.Model(&user).Association("ClientID")
 
-
-	fmt.Printf("CLIENTID : %#v\n", user.ClientID)
+	fmt.Printf("CLIENTID : %#v\n", user)
 	fmt.Printf("CLIENT : %#v\n", client)
 	mailingList := models.MailingList{Name: requestBody.Name}
 	db.NewRecord(mailingList)
