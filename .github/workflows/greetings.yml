@@ -10,4 +10,4 @@ jobs:
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         issue-message: 'Thanks for this issue ;)'
-        pr-message: 'Glad to see this PR merged :D'
+        pr-message: 'Welcome to the PR space :D'
