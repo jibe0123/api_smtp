@@ -1,4 +1,4 @@
-name: Build Go project
+name: Go build && unit tests
 
 on:
   push:
@@ -9,10 +9,34 @@ on:
 jobs:
 
   build:
-
+    name: Build
     runs-on: ubuntu-latest
-
+    env:
+      GO111MODULE: on
     steps:
-    - uses: actions/checkout@v2
-    - name: Build the Docker image for go-app
-      run: cd go-app/ &&  docker build -t go-app .
+
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ^1.13
+        id: go
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v2
+
+      - name: Get dependencies
+        run: |
+          go get -v -t -d ./...
+          if [ -f Gopkg.toml ]; then
+              curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
+              dep ensure
+          fi
+
+      - name: Format
+        uses: sjkaliski/go-github-actions/fmt@v0.5.0
+
+      - name: Build
+        run: go build -v .
+
+      - name: Test
+        run: go test -v .
