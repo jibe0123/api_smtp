@@ -7,8 +7,10 @@ import (
 
 type Recipient struct {
 	gorm.Model
-	Email         string
-	MailingListID uint64
+	Name             string `gorm:"size:255"`
+	Email            string `gorm:"size:255"`
+	MailingList      MailingList
+	RecipientsListID uint64
 }
 
 func (r *Recipient) Serialize() common.JSON {
