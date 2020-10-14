@@ -17,18 +17,18 @@ func Initialize() (*gorm.DB, error) {
 	database := os.Getenv("MYSQL_DATABASE")
 	host := os.Getenv("DB_HOST")
 
-	dsn := user + ":" + pwd + "@tcp("+ host +")/" + database + "?parseTime=true&charset=utf8"
+	dsn := user + ":" + pwd + "@tcp(" + host + ")/" + database + "?parseTime=true&charset=utf8"
 
 	var err error
 
-	for i:=1; i <= 3; i++ {
+	for i := 1; i <= 3; i++ {
 
 		db, err := gorm.Open("mysql", dsn)
 
 		if err == nil {
 			models.Migrate(db)
 			fmt.Println("Connected to database")
-			return db,nil
+			return db, nil
 		}
 		fmt.Println(err)
 		time.Sleep(10 * time.Second)

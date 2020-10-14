@@ -18,7 +18,7 @@ var secretKey []byte
 func init() {
 	// get path from root dir
 	pwd, _ := os.Getwd()
-	keyPath := pwd + "/jwtsecret.key"
+	keyPath := pwd + "go/jwtsecret.key"
 
 	key, readErr := ioutil.ReadFile(keyPath)
 	if readErr != nil {
@@ -29,7 +29,6 @@ func init() {
 
 func validateToken(tokenString string) (common.JSON, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
@@ -48,8 +47,6 @@ func validateToken(tokenString string) (common.JSON, error) {
 	return token.Claims.(jwt.MapClaims), nil
 }
 
-// JWTMiddleware parses JWT token from cookie and stores data and expires date to the context
-// JWT Token can be passed as cookie, or Authorization header
 func JWTMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		tokenString, err := c.Cookie("token")

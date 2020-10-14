@@ -1,5 +1,4 @@
-package mailing_list
-
+package clients
 
 import (
 	"github.com/gin-gonic/gin"
@@ -8,9 +7,9 @@ import (
 
 // ApplyRoutes applies router to the gin Engine
 func ApplyRoutes(r *gin.RouterGroup) {
-	list := r.Group("/mailing-list")
+	clients := r.Group("/clients")
 	{
-		list.GET("/", middlewares.Authorized, ping)
-		list.POST("/", middlewares.Authorized, create)
+		clients.POST("/", middlewares.Authorized, create)
+		clients.GET("/", middlewares.Authorized, list)
 	}
 }

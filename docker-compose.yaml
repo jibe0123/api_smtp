@@ -1,19 +1,19 @@
 version: "3.7"
 services:
   web:
-    restart: always
-    image: go-app
-    ports:
-      - 8080:8080
+    build:
+      context: ./
+      dockerfile: ./docker/build/golang/Dockerfile
     environment:
       MYSQL_USER: docker-database
       MYSQL_PASSWORD: docker-database-pwd
       MYSQL_DATABASE: api_smtp-dev
       MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
       DB_HOST: db:3306
-
-    links:
-      -  db
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./:/go:rw
     networks:
       - backend
   db:

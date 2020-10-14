@@ -1,6 +1,7 @@
-package clients
+package mailing_list
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/jibe0123/api_smtp/database/models"
 	common "github.com/jibe0123/api_smtp/lib"
@@ -8,7 +9,7 @@ import (
 )
 
 // Clients type alias
-type Clients = models.Clients
+type MailingList = models.MailingList
 
 // User type alias
 type User = models.User
@@ -19,40 +20,37 @@ type JSON = common.JSON
 func create(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 	type RequestBody struct {
-		CompanyName string `json:"company_name" binding:"required"`
+		Name string `json:"name" binding:"required"`
 	}
 	var requestBody RequestBody
+	var client models.Clients
 
 	if err := c.BindJSON(&requestBody); err != nil {
 		c.AbortWithStatus(400)
 		return
 	}
 
-	var exists Clients
-	if err := db.Where("company_name = ?", requestBody.CompanyName).First(&exists).Error; err == nil {
-		c.AbortWithStatus(409)
-		return
-	}
+	user := c.MustGet("user").(models.User)
+	db.First(&client, user.ClientID)
 
-	clients := Clients{
-		CompanyName: requestBody.CompanyName,
-	}
-
-	db.NewRecord(clients)
-	db.Create(&clients)
-	c.JSON(200, clients.Serialize())
+	fmt.Printf("USER  : %#v\n", user)
+	fmt.Printf("CLIENT : %#v\n", client)
+	mailingList := models.MailingList{Name: requestBody.Name, ClientID: client.ID}
+	db.NewRecord(mailingList)
+	db.Create(&mailingList)
+	c.JSON(200, mailingList.Serialize())
 }
 
-func list(c *gin.Context) {
+func read(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
 	cursor := c.Query("cursor")
 	recent := c.Query("recent")
 
-	var Clients []Clients
+	var MailingList []MailingList
 
 	if cursor == "" {
-		if err := db.Preload("Users").Limit(10).Order("id desc").Find(&Clients).Error; err != nil {
+		if err := db.Limit(10).Order("id desc").Find(&MailingList).Error; err != nil {
 			c.AbortWithStatus(500)
 			return
 		}
@@ -61,19 +59,18 @@ func list(c *gin.Context) {
 		if recent == "1" {
 			condition = "id > ?"
 		}
-		if err := db.Preload("Users").Limit(10).Order("id desc").Where(condition, cursor).Find(&Clients).Error; err != nil {
+		if err := db.Limit(10).Order("id desc").Where(condition, cursor).Find(&MailingList).Error; err != nil {
 			c.AbortWithStatus(500)
 			return
 		}
 	}
 
-	length := len(Clients)
+	length := len(MailingList)
 	serialized := make([]JSON, length, length)
 
 	for i := 0; i < length; i++ {
-		serialized[i] = Clients[i].Serialize()
+		serialized[i] = MailingList[i].Serialize()
 	}
 
 	c.JSON(200, serialized)
 }
-

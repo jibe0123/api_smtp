@@ -39,7 +39,7 @@ func generateToken(data common.JSON) (string, error) {
 
 	// get path from root dir
 	pwd, _ := os.Getwd()
-	keyPath := pwd + "/jwtsecret.key"
+	keyPath := pwd + "go/jwtsecret.key"
 
 	key, readErr := ioutil.ReadFile(keyPath)
 	if readErr != nil {
@@ -53,9 +53,10 @@ func register(c *gin.Context) {
 	db := c.MustGet("db").(*gorm.DB)
 
 	type RequestBody struct {
-		Username    string `json:"username" binding:"required"`
-		Email string `json:"email" binding:"required"`
-		Password    string `json:"password" binding:"required"`
+		Username string `json:"username" binding:"required"`
+		Email    string `json:"email" binding:"required"`
+		Password string `json:"password" binding:"required"`
+		Client   uint   `json:"client" binding:"required"`
 	}
 
 	var body RequestBody
@@ -80,8 +81,9 @@ func register(c *gin.Context) {
 	// create user
 	user := User{
 		Username:     body.Username,
-		Email:  body.Email,
+		Email:        body.Email,
 		PasswordHash: hash,
+		ClientID:     body.Client,
 	}
 
 	db.NewRecord(user)

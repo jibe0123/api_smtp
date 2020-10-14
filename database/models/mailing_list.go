@@ -7,13 +7,13 @@ import (
 
 type MailingList struct {
 	gorm.Model
-	ClientID      uint
-	Name          string
+	ClientID uint
+	Name     string
 }
 
 func (m *MailingList) Serialize() common.JSON {
 	return common.JSON{
-		"id":     m.ID,
-		"Name":   m.Name,
+		"id":   m.ID,
+		"Name": m.Name,
 	}
 }

@@ -1,6 +1,8 @@
 package middlewares
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 func Authorized(c *gin.Context) {
 	_, exists := c.Get("user")
