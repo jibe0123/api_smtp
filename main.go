@@ -7,7 +7,6 @@ import (
 	"github.com/jibe0123/api_smtp/lib/middlewares"
 )
 
-
 func main() {
 	port := "8080"
 	db, _ := database.Initialize()
